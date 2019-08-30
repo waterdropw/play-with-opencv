@@ -1,0 +1,156 @@
+@echo OFF
+
+set TARGET_OS=%1
+if "%TARGET_OS%" == "" (
+    set TARGET_OS=%HOST_OS%
+)
+if %TARGET_OS% == android (
+    set TARGET_OS=Android
+)
+set HOST_OS=Windows
+set CPU_CORES=2
+
+set SRC_DIR=.\external\opencv
+set EXTRA_MODULE_PATH=.\external\opencv_contrib\modules
+set BUILD_DIR_DEBUG=.\build\x64-Debug
+set BUILD_DIR_RELEASE=.\build\x64-Release
+set ANDROID_BUILD_32=.\build\arm
+set ANDROID_BUILD_64=.\build\aach64
+set INSTALL_DIR=.\prebuilt\%TARGET_OS%
+
+
+echo *** *** *** *** *** *** *** *** *** *** *** ***
+echo HOST_OS: %HOST%
+echo TARGET_OS: %TARGET_OS%
+echo CPU_CORES: %CPU_CORES%
+echo SRC Dir: %SRC_DIR%
+if %TARGET_OS% == %HOST_OS% (
+    echo Build Dir [Debug]: %BUILD_DIR_DEBUG%
+    echo Build Dir [Release]: %BUILD_DIR_RELEASE%
+) else (
+    echo Build Dir [Android32]: %ANDROID_BUILD_32%
+    echo Build Dir [Android64]: %ANDROID_BUILD_64%
+)
+echo Install Dir: %INSTALL_DIR%
+echo *** *** *** *** *** *** *** *** *** *** *** ***
+
+
+if %TARGET_OS% == Android (
+    :: armeabi-v7a
+    cmake  -G "Ninja" ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
+        -D OPENCV_EXTRA_MODULES_PATH=%EXTRA_MODULE_PATH% ^
+        -D ENABLE_CXX11=ON ^
+        -D BUILD_SHARED_LIBS=ON ^
+        -D BUILD_opencv_world=OFF ^
+        -D BUILD_TESTS=OFF ^
+        -D BUILD_EXAMPLES=ON ^
+        -D BUILD_JAVA=ON ^
+        -D BUILD_opencv_python2=OFF ^
+        -D BUILD_opencv_python_bindings_generator=OFF ^
+        -D BUILD_opencv_python_tests=OFF ^
+        -D BUILD_opencv_java=ON ^
+        -D BUILD_opencv_java_bindings_generator=ON ^
+        -D WITH_OPENCL=ON ^
+        -D WITH_OPENMP=ON ^
+        -D WITH_HALIDE=ON ^
+        -D WITH_TBB=ON ^
+        -D BUILD_ANDROID_PROJECTS=OFF ^
+        -D BUILD_opencv_freetype=OFF ^
+        -D CMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake ^
+        -D ANDROID_SDK=%ANDROID_SDK% ^
+        -D ANDROID_NDK=%ANDROID_NDK% ^
+        -D ANDROID_PLATFORM=android-28 ^
+        -D ANDROID_STL=c++_static ^
+        -D ANDROID_PIE=ON ^
+        -D ANDROID_ABI="armeabi-v7a with NEON" ^
+        -B %ANDROID_BUILD_32% %SRC_DIR%
+
+    cmake --build %ANDROID_BUILD_32% --config Release --target install -- -j%CPU_CORES%
+    
+    :: arm64-v8a
+    cmake  -G "Ninja" ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
+        -D OPENCV_EXTRA_MODULES_PATH=%EXTRA_MODULE_PATH% ^
+        -D ENABLE_CXX11=ON ^
+        -D BUILD_SHARED_LIBS=ON ^
+        -D BUILD_opencv_world=OFF ^
+        -D BUILD_TESTS=OFF ^
+        -D BUILD_EXAMPLES=ON ^
+        -D BUILD_JAVA=ON ^
+        -D BUILD_opencv_python2=OFF ^
+        -D BUILD_opencv_python_bindings_generator=OFF ^
+        -D BUILD_opencv_python_tests=OFF ^
+        -D BUILD_opencv_java=ON ^
+        -D BUILD_opencv_java_bindings_generator=ON ^
+        -D WITH_OPENCL=ON ^
+        -D WITH_OPENMP=ON ^
+        -D WITH_HALIDE=ON ^
+        -D WITH_TBB=ON ^
+        -D BUILD_ANDROID_PROJECTS=OFF ^
+        -D BUILD_opencv_freetype=OFF ^
+        -D CMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake ^
+        -D ANDROID_SDK=%ANDROID_SDK% ^
+        -D ANDROID_NDK=%ANDROID_NDK% ^
+        -D ANDROID_PLATFORM=android-28 ^
+        -D ANDROID_STL=c++_static ^
+        -D ANDROID_PIE=ON ^
+        -D ANDROID_ABI="arm64-v8a" ^
+        -B %ANDROID_BUILD_64% %SRC_DIR%
+
+    cmake --build %ANDROID_BUILD_64% --config Release --target install -- -j%CPU_CORES%
+
+) else (
+    :: Debug
+    cmake -G "Ninja" ^
+        -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D OPENCV_EXTRA_MODULES_PATH=%EXTRA_MODULE_PATH% ^
+        -D ENABLE_CXX11=ON ^
+        -D BUILD_SHARED_LIBS=ON ^
+        -D BUILD_opencv_world=OFF ^
+        -D BUILD_TESTS=OFF ^
+        -D BUILD_EXAMPLES=ON ^
+        -D BUILD_JAVA=ON ^
+        -D BUILD_opencv_python2=OFF ^
+        -D BUILD_opencv_python_bindings_generator=OFF ^
+        -D BUILD_opencv_python_tests=OFF ^
+        -D BUILD_opencv_java=ON ^
+        -D BUILD_opencv_java_bindings_generator=ON ^
+        -D WITH_OPENCL=ON ^
+        -D WITH_OPENMP=ON ^
+        -D WITH_HALIDE=ON ^
+        -D WITH_TBB=ON ^
+        -D WITH_IPP=ON ^
+        -B %BUILD_DIR_RELEASE% %SRC_DIR%
+
+    
+    cmake --build %BUILD_DIR_DEBUG% --config Debug --target install
+
+    :: Release
+    cmake -G "Ninja" ^
+        -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D OPENCV_EXTRA_MODULES_PATH=%EXTRA_MODULE_PATH% ^
+        -D ENABLE_CXX11=ON ^
+        -D BUILD_SHARED_LIBS=ON ^
+        -D BUILD_opencv_world=OFF ^
+        -D BUILD_TESTS=OFF ^
+        -D BUILD_EXAMPLES=ON ^
+        -D BUILD_JAVA=ON ^
+        -D BUILD_opencv_python2=OFF ^
+        -D BUILD_opencv_python_bindings_generator=OFF ^
+        -D BUILD_opencv_python_tests=OFF ^
+        -D BUILD_opencv_java=ON ^
+        -D BUILD_opencv_java_bindings_generator=ON ^
+        -D WITH_OPENCL=ON ^
+        -D WITH_OPENMP=ON ^
+        -D WITH_HALIDE=ON ^
+        -D WITH_TBB=ON ^
+        -D WITH_IPP=ON ^
+        -B %BUILD_DIR_RELEASE% %SRC_DIR%
+    
+    cmake --build %BUILD_DIR_RELEASE% --config Release --target install
+)
