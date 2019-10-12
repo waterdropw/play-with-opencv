@@ -9,7 +9,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 
 option(BUILD_WITH_EXPERIMENT "Build with experiment tests" OFF)
-option(BUILD_WITH_PERFORMANCE "Build with performance tests" ON)
+option(BUILD_WITH_PERFORMANCE "Build with performance tests" OFF)
 
 
 set(CMAKE_MACOSX_RPATH ON)

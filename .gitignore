@@ -1,6 +1,7 @@
 /.vscode
 /.idea
 /out
+/build
 .DS_Store
 
 # Prerequisites
