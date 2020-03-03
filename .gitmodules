@@ -4,3 +4,6 @@
 [submodule "external/opencv_contrib"]
 	path = external/opencv_contrib
 	url = https://github.com/opencv/opencv_contrib.git
+[submodule "utils"]
+	path = utils
+	url = https://github.com/xbwee1024/CommonUtils.git

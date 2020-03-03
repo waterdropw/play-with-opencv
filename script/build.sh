@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+CURRENT_DIR=`pwd`
 HOST=`uname -sm`
 TARGET_OS=$1
 HOST_SYSTEM=`uname`
@@ -17,16 +18,25 @@ elif [[ ${HOST_SYSTEM} == "Darwin" ]]; then
     CPU_CORES=`sysctl -n hw.physicalcpu`
 fi
 
+
+
 INSTALL_ROOT=out/install/${TARGET_OS}
 BUILD_ROOT=out/build
-
+if [[ ! -e "${OpenCV_DIR}" ]]; then
+    if [[ ${TARGET_OS} == "Android" ]]; then
+        export OpenCV_DIR=${INSTALL_ROOT}/arm64-v8a/
+    else
+        export OpenCV_DIR=${CURRENT_DIR}/out/opencv/distrib/${TARGET_OS}/x64-Release/lib/cmake/opencv4
+    fi
+fi
 echo "*** *** *** *** *** *** *** *** *** *** *** ***"
 echo "HOST_OS: ${HOST}"
 echo "TARGET_OS: ${TARGET_OS}"
 echo "CPU_CORES: ${CPU_CORES}"
-echo "SRC Dir: ${SRC_DIR}"
+# echo "SRC Dir: ${SRC_DIR}"
 echo "Build Dir: ${BUILD_ROOT}"
-echo "Install Dir: ${INSTALL_DIR}"
+echo "Install Dir: ${INSTALL_ROOT}"
+echo "OpenCV_DIR: ${OpenCV_DIR}"
 echo "*** *** *** *** *** *** *** *** *** *** *** ***"
 
 if [[ ${TARGET_OS} == "Android" ]]; then

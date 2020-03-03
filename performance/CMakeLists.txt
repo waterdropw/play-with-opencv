@@ -8,7 +8,11 @@ find_package(OpenCV 4 REQUIRED)
 
 
 add_executable(tapi tapi.cpp)
-target_link_libraries(tapi PRIVATE ${OpenCV_LIBS})
+target_link_libraries(tapi
+    PRIVATE 
+        ${OpenCV_LIBS}
+        COMMON::utils
+)
 
 target_compile_features(tapi PUBLIC cxx_std_11)
 target_compile_options(tapi PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
@@ -18,8 +22,6 @@ target_compile_options(tapi PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 ##############################################
 # Installation instructions
 include(GNUInstallDirs)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CMAKE_INSTALL_BINDIR}/data)
 
 install(TARGETS tapi
     EXPORT play-with-opencv-targets
