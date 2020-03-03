@@ -1,0 +1,32 @@
+dist: xenial
+sudo: required
+language:
+  - cpp
+compiler:
+  - clang
+env:
+    global:
+    - NINJA_VERSION=1.9.0
+    - CMAKE_VERSION=3.16.4
+    - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
+script:
+    - echo "DEPS_DIR=${DEPS_DIR}"
+    - echo "Downloading Ninja ..."
+    - mkdir -p ${DEPS_DIR}/ninja
+    - NINJA_URL=https://github.com/ninja-build/ninja/releases/download/v{NINJA_VERSION}/ninja-linux.zip
+    - travis_retry wget --no-check-certificate --quiet -O ${DEPS_DIR}/ninja/ninja.zip ${NINJA_URL}
+    - unzip ${DEPS_DIR}/ninja/ninja.zip -d ${DEPS_DIR}/ninja
+    - export PATH=${DEPS_DIR}/ninja:${PATH}
+
+    - CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
+    - echo "Downloading CMake ..."
+    - mkdir -p ${DEPS_DIR}/cmake
+    - travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${DEPS_DIR}/cmake
+    - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+
+    - cmake --version
+    - ninja --version
+    - echo "Build OpenCV ..."
+    - script/build-ocv.sh
+    - echo "Start building..."
+    - script/build.sh
