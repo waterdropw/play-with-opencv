@@ -10,11 +10,11 @@ if %TARGET_OS% == android (
 set HOST_OS=Windows
 set CPU_CORES=4
 
-set BUILD_DIR_DEBUG=.\out\build\x64-Debug
-set BUILD_DIR_RELEASE=.\out\build\x64-Release
-set ANDROID_BUILD_32=.\out\build\arm
-set ANDROID_BUILD_64=.\out\build\aach64
-set INSTALL_DIR=.\out\install\%TARGET_OS%
+set BUILD_DIR_DEBUG=.\out\build\%TARGET_OS%\x64-Debug
+set BUILD_DIR_RELEASE=.\out\build\%TARGET_OS%\x64-Release
+set ANDROID_BUILD_32=.\out\build\%TARGET_OS%\armeabi-v7a
+set ANDROID_BUILD_64=.\out\build\%TARGET_OS%\arm64-v8a
+set INSTALL_ROOT=.\out\install\%TARGET_OS%
 
 
 echo *** *** *** *** *** *** *** *** *** *** *** ***
@@ -29,14 +29,14 @@ if %TARGET_OS% == %HOST_OS% (
     echo Build Dir [Android32]: %ANDROID_BUILD_32%
     echo Build Dir [Android64]: %ANDROID_BUILD_64%
 )
-echo Install Dir: %INSTALL_DIR%
+echo Install Dir: %INSTALL_ROOT%
 echo *** *** *** *** *** *** *** *** *** *** *** ***
 
 
 if %TARGET_OS% == Android (
     :: 32bit
     cmake  -G "Ninja" ^
-        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_ROOT%\armeabi-v7a ^
         -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
         -D CMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake ^
         -D ANDROID_SDK=%ANDROID_SDK% ^
@@ -50,7 +50,7 @@ if %TARGET_OS% == Android (
     cmake --build %ANDROID_BUILD_32% --config Release --target install -- -j%CPU_CORES%
     :: 64bit
     cmake  -G "Ninja" ^
-        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_ROOT%\arm64-v8a ^
         -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
         -D CMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake ^
         -D ANDROID_SDK=%ANDROID_SDK% ^
@@ -64,11 +64,11 @@ if %TARGET_OS% == Android (
     cmake --build %ANDROID_BUILD_64% --config Release --target install -- -j%CPU_CORES%
 
 ) else (
-
+    :: Debug
     cmake -S %SRC_DIR% -B %BUILD_DIR_DEBUG% ^
         -G "Visual Studio 16 2019" ^
         -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
-        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_ROOT%\x64-Debug ^
         -D OPENCV_EXTRA_MODULES_PATH=%EXTRA_MODULE_PATH% ^
         -D ENABLE_CXX11=ON ^
         -D BUILD_SHARED_LIBS=ON ^
@@ -89,11 +89,11 @@ if %TARGET_OS% == Android (
     
     cmake --build %BUILD_DIR_DEBUG% --config Debug --target install
 
-
+    :: Release
     cmake -S %SRC_DIR% -B %BUILD_DIR_RELEASE% ^
         -G "Visual Studio 16 2019" ^
         -D CMAKE_POSITION_INDEPENDENT_CODE=ON ^
-        -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+        -D CMAKE_INSTALL_PREFIX=%INSTALL_ROOT%\x64-Release ^
         -D OPENCV_EXTRA_MODULES_PATH=%EXTRA_MODULE_PATH% ^
         -D ENABLE_CXX11=ON ^
         -D BUILD_SHARED_LIBS=ON ^
