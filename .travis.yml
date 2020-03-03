@@ -6,14 +6,14 @@ compiler:
   - clang
 env:
     global:
-    - NINJA_VERSION=1.9.0
+    - NINJA_VERSION=1.10.0
     - CMAKE_VERSION=3.16.4
     - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
 script:
     - echo "DEPS_DIR=${DEPS_DIR}"
     - echo "Downloading Ninja ..."
     - mkdir -p ${DEPS_DIR}/ninja
-    - NINJA_URL=https://github.com/ninja-build/ninja/releases/download/v{NINJA_VERSION}/ninja-linux.zip
+    - NINJA_URL=https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip
     - travis_retry wget --no-check-certificate --quiet -O ${DEPS_DIR}/ninja/ninja.zip ${NINJA_URL}
     - unzip ${DEPS_DIR}/ninja/ninja.zip -d ${DEPS_DIR}/ninja
     - export PATH=${DEPS_DIR}/ninja:${PATH}
