@@ -21,7 +21,7 @@ fi
 
 
 INSTALL_ROOT=out/install/${TARGET_OS}
-BUILD_ROOT=out/build
+BUILD_ROOT=out/build/${TARGET_OS}
 if [[ ! -e "${OpenCV_DIR}" ]]; then
     if [[ ${TARGET_OS} == "Android" ]]; then
         export OpenCV_DIR=${INSTALL_ROOT}/arm64-v8a/
@@ -39,15 +39,28 @@ echo "Install Dir: ${INSTALL_ROOT}"
 echo "OpenCV_DIR: ${OpenCV_DIR}"
 echo "*** *** *** *** *** *** *** *** *** *** *** ***"
 
+
 if [[ ${TARGET_OS} == "Android" ]]; then
-    ANDROID_NDK=`echo $ANDROID_NDK`
-    ANDROID_SDK=`echo $ANDROID_SDK`
+    if [[ -d "$ANDROID_NDK" ]]; then
+        echo "ANDROID_NDK=$ANDROID_NDK"
+    elif [[ -d "$ANDROID_NDK_ROOT" ]]; then
+        ANDROID_NDK=$ANDROID_NDK_ROOT
+    elif [[ -d "$ANDROID_HOME" ]]; then
+        ANDROID_NDK=$ANDROID_HOME/ndk-bundle
+    fi
+    
+    if [[ -d "$ANDROID_SDK" ]]; then
+        echo "ANDROID_SDK=$ANDROID_SDK"
+    elif [[ -d "$ANDROID_HOME" ]]; then
+        ANDROID_SDK=$ANDROID_HOME
+    fi
+
     if [[ ! -e "${ANDROID_NDK}" ]]; then
-        echo "Error: ANDROID_NDK is not set"
+        echo "Error: ANDROID_NDK DOES NOT EXISTS"
         exit
     fi
     if [[ ! -e "${ANDROID_SDK}" ]]; then
-        echo "Error: ANDROID_SDK is not set"
+        echo "Error: ANDROID_SDK DOES NOT EXISTS"
         exit
     fi
 fi
