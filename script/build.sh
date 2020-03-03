@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 HOST=`uname -sm`
 TARGET_OS=$1
@@ -17,7 +17,7 @@ elif [[ ${HOST_SYSTEM} == "Darwin" ]]; then
     CPU_CORES=`sysctl -n hw.physicalcpu`
 fi
 
-INSTALL_DIR=out/install/${TARGET_OS}
+INSTALL_ROOT=out/install/${TARGET_OS}
 BUILD_ROOT=out/build
 
 echo "*** *** *** *** *** *** *** *** *** *** *** ***"
@@ -57,20 +57,24 @@ if [[ ${TARGET_OS} == "Android" ]]; then
 fi
 
 if [[ ${TARGET_OS} == "Android" ]]; then
-    BUILD_DIR=${BUILD_ROOT}/arm
-    cmake ${CMAKE_CONFIG} -D ANDROID_ABI="armeabi-v7a with NEON" -B ${BUILD_DIR} .
+    BUILD_DIR=${BUILD_ROOT}/armeabi-v7a
+    INSTALL_DIR=${INSTALL_ROOT}/armeabi-v7a
+    cmake ${CMAKE_CONFIG} -D ANDROID_ABI="armeabi-v7a with NEON" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
-    BUILD_DIR=${BUILD_ROOT}/aarch64
-    cmake ${CMAKE_CONFIG} -D ANDROID_ABI="arm64-v8a" -B ${BUILD_DIR} .
+    BUILD_DIR=${BUILD_ROOT}/arm64-v8a
+    INSTALL_DIR=${INSTALL_ROOT}/arm64-v8a
+    cmake ${CMAKE_CONFIG} -D ANDROID_ABI="arm64-v8a" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 else
     # Debug vs Release has no difference!!!
     # BUILD_DIR=${BUILD_ROOT}/x64-Debug
-    # cmake ${CMAKE_CONFIG} -S ${SRC_DIR} -B ${BUILD_DIR}
+    # INSTALL_DIR=${INSTALL_ROOT}/x64-Debug
+    # cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Debug -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
     # cmake --build ${BUILD_DIR} --config Debug --target install -- -j${CPU_CORES}
 
     BUILD_DIR=${BUILD_ROOT}/x64-Release
-    cmake ${CMAKE_CONFIG} -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
+    INSTALL_DIR=${INSTALL_ROOT}/x64-Release
+    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 fi

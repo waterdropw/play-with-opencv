@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 HOST=`uname -sm`
 TARGET_OS=$1
@@ -52,7 +52,6 @@ if [[ ${TARGET_OS} == "Android" ]]; then
 fi
 
 CMAKE_CONFIG="-G "Ninja" \\
-    -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} \\
     -D CMAKE_POSITION_INDEPENDENT_CODE=ON \\
     -D OPENCV_EXTRA_MODULES_PATH=${EXTRA_MODULE_PATH} \\
     -D ENABLE_CXX11=ON \\
@@ -86,24 +85,24 @@ fi
 
 
 if [[ ${TARGET_OS} == "Android" ]]; then
-    BUILD_DIR=${BUILD_ROOT}/arm
-    INSTALL_DIR=${INSTALL_ROOT}/arm
+    BUILD_DIR=${BUILD_ROOT}/armeabi-v7a
+    INSTALL_DIR=${INSTALL_ROOT}/armeabi-v7a
     cmake ${CMAKE_CONFIG} -D ANDROID_ABI="armeabi-v7a with NEON" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
-    BUILD_DIR=${BUILD_ROOT}/aarch64
-    INSTALL_DIR=${INSTALL_ROOT}/aarch64
+    BUILD_DIR=${BUILD_ROOT}/arm64-v8a
+    INSTALL_DIR=${INSTALL_ROOT}/arm64-v8a
     cmake ${CMAKE_CONFIG} -D ANDROID_ABI="arm64-v8a" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 else
     # Debug vs Release has no difference!!!
-    BUILD_DIR=${BUILD_ROOT}/x64-Debug
-    INSTALL_DIR=${INSTALL_ROOT}/x64-Debug
-    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Debug -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
-    cmake --build ${BUILD_DIR} --config Debug --target install -- -j${CPU_CORES}
+    # BUILD_DIR=${BUILD_ROOT}/x64-Debug
+    # INSTALL_DIR=${INSTALL_ROOT}/x64-Debug
+    # cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Debug -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
+    # cmake --build ${BUILD_DIR} --config Debug --target install -- -j${CPU_CORES}
 
     BUILD_DIR=${BUILD_ROOT}/x64-Release
     INSTALL_DIR=${INSTALL_ROOT}/x64-Release
-    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Debug -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
+    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 fi

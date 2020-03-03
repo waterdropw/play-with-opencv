@@ -1,58 +1,38 @@
 # Play with OpenCV
 
-## User Guide
+## Build & Install
 
-GCC/Clang, CMake, Android-sdk, Android-ndk installed  
-for Linux, Mac, Windows
+### Build Status
 
-```bash
-./build.sh
-```
+| Linux                        |
+|------------------------------|
+| [![linux build status][1]][2]|
 
-for Android
-
-```bash
-./build.sh android
-```
-
-After build complete, the binary is located at 
-```bash
-out/install/bin
-```
-
-## Build OpenCV
-
-### Features
-
-1. Convienient build script for multiple platform, especially for Android
-
-2. Remove the dependency of libgnustl_shared.so, instead with c++_static
-
-3. Enable some 3rdparty library for performance,  TBB/IPP, OpenCL, IPP, NEON(Android)
-
-4. Build with contrib libraries  
-opencv_contrib are some extra usefull libraries which does not build within official release SDK  
+[1]: https://travis-ci.org/xbwee1024/play-with-halide.svg?branch=master
+[2]: https://travis-ci.org/xbwee1024/play-with-halide
 
 ### Prerequisites
-**Ninja** installed
-
-For Unix-like systems,
-**gcc** or **clang** installed
-
-For windows,
-**Visual Studio** installed
+`Ninja`, `llvm` and `cmake` installed
 
 For Android,
-**Android NDK** installed. **Android SDK** is not required now (build Android examples is disabled)
+`Android NDK` installed. `Android SDK` is not required now (build Android examples is disabled)
 
-### Building
+### Clone the source code
+```bash
+git clone https://github.com/xbwee1024/play-with-opencv.git
+cd play-with-opencv
+git submodule update --init --recursive
+# or clone with --recursive
+git clone https://github.com/xbwee1024/play-with-opencv.git --recursive
+```
+
+### Build OpenCV
 For Unix-like systems, 
 ```bash
 ./script/build-ocv.sh
 # or add android to cross-compile Android
 ./script/build-ocv.sh android
 ```
-this will build the **OpenCV** library and install into /usr/local/
 
 For windows,
 ```bash
@@ -61,9 +41,52 @@ For windows,
 .\script\build-ocv.bat android
 ```
 
-### Use OpenCV
+this will build the `OpenCV` library and install into `out/opencv/distrib/${TARGET_OS}`
 
-1. set/export **OpenCV_DIR** to the right path of OpenCV, for Android:
+Build Options:
+
+```bash
+CMAKE_CONFIG="-G "Ninja" \\
+    -D CMAKE_POSITION_INDEPENDENT_CODE=ON \\
+    -D OPENCV_EXTRA_MODULES_PATH=${EXTRA_MODULE_PATH} \\
+    -D ENABLE_CXX11=ON \\
+    -D BUILD_SHARED_LIBS=ON \\
+    -D BUILD_opencv_world=OFF \\
+    -D BUILD_TESTS=OFF \\
+    -D BUILD_EXAMPLES=ON \\
+    -D BUILD_JAVA=ON \\
+    -D BUILD_opencv_python2=OFF \\
+    -D BUILD_opencv_python_bindings_generator=OFF \\
+    -D BUILD_opencv_python_tests=OFF \\
+    -D BUILD_opencv_java=ON \\
+    -D BUILD_opencv_java_bindings_generator=ON \\
+    -D WITH_OPENCL=ON \\
+    -D WITH_OPENMP=ON \\
+    -D WITH_HALIDE=ON \\
+    -D WITH_TBB=ON "
+```
+- `BUILD_SHARED_LIBS`: Set `On` for shared library, `OFF` for static library
+- `OPENCV_EXTRA_MODULES_PATH`: Build with contrib libraries, if no need, remove it.
+- `BUILD_opencv_world`: Set `ON` will output only one `libopencv_world.so`
+- `WITH_OPENCL`: Enable/disable OpenCL support
+- `WITH_OPENMP`: Enable/Disable OpenMP support
+- `WITH_TBB`: Enable/Disable TBB support
+- `WITH_HALIDE`: Enable/Disable Halide support
+
+### Build Project
+
+```bash
+./script/build.sh
+# or add android to cross-compile Android
+./script/build.sh android
+```
+
+When building finished, binaries will be installed at `out/install/${TARGET_OS}/bin`
+
+
+## Use OpenCV
+
+1. set/export `OpenCV_DIR` to the right path of OpenCV, for Android:
 
 ```bash
 export OpenCV_DIR=out/install/Android/native/jni
