@@ -8,8 +8,8 @@
 |------------------------------|
 | [![linux build status][1]][2]|
 
-[1]: https://travis-ci.org/xbwee1024/play-with-halide.svg?branch=master
-[2]: https://travis-ci.org/xbwee1024/play-with-halide
+[1]: https://travis-ci.org/xbwee1024/play-with-opencv.svg?branch=master
+[2]: https://travis-ci.org/xbwee1024/play-with-opencv 
 
 ### Prerequisites
 `Ninja`, `llvm` and `cmake` installed
