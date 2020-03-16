@@ -7,3 +7,9 @@
 [submodule "utils"]
 	path = utils
 	url = https://github.com/xbwee1024/CommonUtils.git
+[submodule "external/benchmark"]
+	path = external/benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "external/googletest"]
+	path = external/googletest
+	url = https://github.com/google/googletest.git

@@ -8,20 +8,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 
-option(BUILD_WITH_EXPERIMENT "Build with experiment tests" ON)
-option(BUILD_WITH_PERFORMANCE "Build with performance tests" ON)
+option(BUILD_WITH_PERFTEST "Build with performance tests" ON)
 
 
 set(CMAKE_MACOSX_RPATH ON)
 
 add_subdirectory(utils)
 
-if (BUILD_WITH_EXPERIMENT)
-    add_subdirectory(experiment)
-endif()
-
-if (BUILD_WITH_PERFORMANCE)
-    add_subdirectory(performance)
+if (BUILD_WITH_PERFTEST)
+    set(GOOGLETEST_PATH "${CMAKE_SOURCE_DIR}/external/googletest" CACHE INTERNAL "google test src path")
+    add_subdirectory(external/benchmark)
+    add_subdirectory(perftest)
 endif()
 
 
