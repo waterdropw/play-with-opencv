@@ -1,6 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
+
 #include <math.h>
+#include <string.h>
 
 #include <array>
 #include <vector>
@@ -88,19 +88,18 @@ static void BM_memcpy(benchmark::State &state)
 }
 // BENCHMARK(BM_memcpy)->Arg(8)->Arg(64)->Arg(512)->Arg(1 << 10)->Arg(8 << 10);
 // BENCHMARK(BM_memcpy)->Range(8, 8<<10);
-BENCHMARK(BM_memcpy)->RangeMultiplier(2)->Range(8, 8<<10);
-
+BENCHMARK(BM_memcpy)->RangeMultiplier(2)->Range(8, 8 << 10);
 
 static void BM_VecInit(benchmark::State &state)
 {
-    for (auto _ : state) {
+    for (auto _ : state)
+    {
         std::vector<int> v(state.range(0), state.range(0));
         benchmark::DoNotOptimize(v.data());
         benchmark::ClobberMemory();
     }
 }
 BENCHMARK(BM_VecInit)->DenseRange(0, 1024, 128);
-
 
 static void bench_N(benchmark::State &state)
 {
@@ -145,20 +144,21 @@ static void bench_Square(benchmark::State &state)
 }
 BENCHMARK(bench_Square)->RangeMultiplier(10)->Range(10, 100000)->Complexity();
 
-static void BM_StringCompare(benchmark::State &state) {
+static void BM_StringCompare(benchmark::State &state)
+{
     std::string s1(state.range(0), '-');
     std::string s2(state.range(0), '-');
-    for (auto _ : state) {
+    for (auto _ : state)
+    {
         benchmark::DoNotOptimize(s1.compare(s2));
     }
     state.SetComplexityN(state.range(0));
 }
 BENCHMARK(BM_StringCompare)
     ->RangeMultiplier(2)
-    ->Range(1<<10, 1<<18)
+    ->Range(1 << 10, 1 << 18)
     // ->Complexity(benchmark::oN);
     // ->Complexity();
-    ->Complexity([](benchmark::IterationCount n)->double{return n;});
-
+    ->Complexity([](benchmark::IterationCount n) -> double { return n; });
 
 BENCHMARK_MAIN();

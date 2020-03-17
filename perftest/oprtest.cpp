@@ -1,15 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
 
 #include <opencv2/opencv.hpp>
 #include <benchmark/benchmark.h>
 
-#define LOG_TAG     "OPRTEST"
+#define LOG_TAG "OPRTEST"
 #include "utils.h"
 
-
-
-static void ocv_add(benchmark::State& state) {
+static void ocv_add(benchmark::State &state)
+{
     int rows = state.range(1);
     int cols = state.range(0);
     int type = state.range(2);
@@ -22,7 +19,8 @@ static void ocv_add(benchmark::State& state) {
         cv::add(src1, src2, dst, mask);
 }
 
-static void ocv_addWeighted(benchmark::State& state) {
+static void ocv_addWeighted(benchmark::State &state)
+{
     int rows = state.range(1);
     int cols = state.range(0);
     int type = state.range(2);
@@ -37,7 +35,8 @@ static void ocv_addWeighted(benchmark::State& state) {
         cv::addWeighted(src1, alpha, src2, beta, gamma, dst);
 }
 
-static void ocv_subtract(benchmark::State& state) {
+static void ocv_subtract(benchmark::State &state)
+{
     int rows = state.range(1);
     int cols = state.range(0);
     int type = state.range(2);
@@ -49,7 +48,8 @@ static void ocv_subtract(benchmark::State& state) {
         cv::subtract(src1, src2, dst);
 }
 
-static void ocv_absdiff(benchmark::State& state) {
+static void ocv_absdiff(benchmark::State &state)
+{
     int rows = state.range(1);
     int cols = state.range(0);
     int type = state.range(2);
@@ -61,7 +61,8 @@ static void ocv_absdiff(benchmark::State& state) {
         cv::absdiff(src1, src2, dst);
 }
 
-static void ocv_split(benchmark::State& state) {
+static void ocv_split(benchmark::State &state)
+{
     int rows = state.range(1);
     int cols = state.range(0);
     int type = state.range(2);
@@ -72,7 +73,8 @@ static void ocv_split(benchmark::State& state) {
         cv::split(src, output);
 }
 
-static void ocv_merge(benchmark::State& state) {
+static void ocv_merge(benchmark::State &state)
+{
     int rows = state.range(1);
     int cols = state.range(0);
     int type = state.range(2);
@@ -83,8 +85,6 @@ static void ocv_merge(benchmark::State& state) {
     for (auto _ : state)
         cv::merge(tmp, src);
 }
-
-
 
 constexpr int WIDTH = 4000, HEIGHT = 3000;
 

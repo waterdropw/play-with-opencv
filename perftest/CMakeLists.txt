@@ -20,12 +20,11 @@ target_compile_options(tapi PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 add_executable(memcpy memcpy.cpp)
 target_link_libraries(memcpy
     PRIVATE 
-        ${OpenCV_LIBS}
         COMMON::utils
         benchmark::benchmark
         benchmark::benchmark_main
 )
-target_compile_features(memcpy PUBLIC cxx_std_14)
+target_compile_features(memcpy PUBLIC cxx_std_17)
 target_compile_options(memcpy PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 # target_compile_options(memcpy PRIVATE -O1)
 
@@ -39,7 +38,7 @@ target_link_libraries(oprtest
         benchmark::benchmark
         benchmark::benchmark_main
 )
-target_compile_features(oprtest PUBLIC cxx_std_14)
+target_compile_features(oprtest PUBLIC cxx_std_17)
 target_compile_options(oprtest PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 
 ##############################################
