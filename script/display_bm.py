@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 def split_group(datamap):
     ''' Split group by the last part of name
     such as BM_memcpy_naive/BM_memcpy_fast will be the same group
-    TestCase name rule: BM_testname_tagname
+    TestCase name rule: BM_testname_tagname, the last part MUST BE category name
     '''
     categories = []
     groups = {}
@@ -123,7 +123,7 @@ def plot_group(x, gn, datamap, cols=2):
         plot_subgraph(axes[index], x, ycoords, item, labels, item)
         index += 1
 
-    fig.savefig('output/{}.jpg'.format(gn))
+    fig.savefig('{}.jpg'.format(gn))
 
     # fig.show()
 

@@ -32,7 +32,7 @@ cv::UMat tapi() {
 
 int main(int argc, char** argv)
 {
-    utils::perf::Timer timer;
+    xbwee::perf::Timer timer;
 
     cv::Mat apiRes = api();
     double apiTime = timer.get_msecs_reset();
