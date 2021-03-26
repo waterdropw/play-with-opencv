@@ -59,7 +59,6 @@ if [[ ${TARGET_OS} == "Android" ]]; then
 fi
 
 CMAKE_CONFIG="-G "Ninja" \\
-    -D OpenCV_DIR=${OpenCV_DIR} \\
     -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} \\
     -D CMAKE_POSITION_INDEPENDENT_CODE=ON \\
     "
@@ -69,7 +68,7 @@ if [[ ${TARGET_OS} == "Android" ]]; then
     -D CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \\
     -D ANDROID_SDK=${ANDROID_SDK} \\
     -D ANDROID_NDK=${ANDROID_NDK} \\
-    -D ANDROID_PLATFORM=android-26 \\
+    -D ANDROID_PLATFORM=android-28 \\
     -D ANDROID_STL=c++_static \\
     -D ANDROID_PIE=ON "
 fi
@@ -79,16 +78,16 @@ if [[ ${TARGET_OS} == "Android" ]]; then
     TARGET_ARCH_ABI=arm64-v8a
     BUILD_DIR=${BUILD_ROOT}/${TARGET_ARCH_ABI}
     INSTALL_DIR=${INSTALL_ROOT}/${TARGET_ARCH_ABI}
-    OpenCV_DIR=${CURRENT_DIR}/out/opencv/distrib/Android/${TARGET_ARCH_ABI}/sdk/native/jni
+    OpenCV_DIR=${CURRENT_DIR}/out/opencv/distrib/Android/sdk/native/jni
     cmake ${CMAKE_CONFIG} -D OpenCV_DIR=${OpenCV_DIR} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="arm64-v8a" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
-    # TARGET_ARCH_ABI=armeabi-v7a
-    # BUILD_DIR=${BUILD_ROOT}/${TARGET_ARCH_ABI}
-    # INSTALL_DIR=${INSTALL_ROOT}/${TARGET_ARCH_ABI}
-    # OpenCV_DIR=${CURRENT_DIR}/out/opencv/distrib/Android/${TARGET_ARCH_ABI}/sdk/native/jni
-    # cmake ${CMAKE_CONFIG} -D OpenCV_DIR=${OpenCV_DIR} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="armeabi-v7a with NEON" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
-    # cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
+    TARGET_ARCH_ABI=armeabi-v7a
+    BUILD_DIR=${BUILD_ROOT}/${TARGET_ARCH_ABI}
+    INSTALL_DIR=${INSTALL_ROOT}/${TARGET_ARCH_ABI}
+    OpenCV_DIR=${CURRENT_DIR}/out/opencv/distrib/Android/sdk/native/jni
+    cmake ${CMAKE_CONFIG} -D OpenCV_DIR=${OpenCV_DIR} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="armeabi-v7a with NEON" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} .
+    cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
 else
 

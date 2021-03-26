@@ -581,7 +581,7 @@ static void BM_resizeBilinear_ocv(benchmark::State& state) {
     int rows = state.range(0);
     int cols = state.range(0);
     int type = CV_8UC3;
-    cv::Size dstsize( cols*2, rows*2 );
+    cv::Size dstsize( 192*1.66, 320 );
     cv::Mat src(rows, cols, type);
     cv::Mat dst;
 
@@ -592,6 +592,20 @@ static void BM_resizeBilinear_ocv(benchmark::State& state) {
     PMU_RECORD_END();
 }
 
+static void BM_resizeBilinear2_ocv(benchmark::State& state) {
+    int rows = state.range(0);
+    int cols = state.range(0);
+    int type = CV_8UC3;
+    cv::Size dstsize( 192, 320 );
+    cv::Mat src(rows, cols, type);
+    cv::Mat dst;
+
+    PMU_RECORD_BEGIN();
+    for (auto _ : state)
+        cv::resize( src, dst, dstsize, 0, 0, cv::INTER_LINEAR);
+
+    PMU_RECORD_END();
+}
 
 static void BM_resizeBicubic_ocv(benchmark::State& state) {
     int rows = state.range(0);
@@ -704,23 +718,24 @@ constexpr int MIN_HEIGHT = 1<<4, MAX_HEIGHT = 1<<12;
 
 #endif
 
-BENCHMARK_IMAGE(BM_medianBlur_ocv);
-BENCHMARK_IMAGE(BM_GaussianBlur_ocv);
-BENCHMARK_IMAGE(BM_Sobel_ocv);
-BENCHMARK_IMAGE(BM_Canny_ocv);
-BENCHMARK_IMAGE(BM_dilate_ocv);
-BENCHMARK_IMAGE(BM_erode_ocv);
-BENCHMARK_IMAGE(BM_integral_ocv);
-BENCHMARK_IMAGE(BM_boxFilter_ocv);
-BENCHMARK_IMAGE(BM_bilateralFilter_ocv);
-BENCHMARK_IMAGE(BM_calcHist_ocv);
-BENCHMARK_IMAGE(BM_pyrDown_ocv);
-BENCHMARK_IMAGE(BM_pyrUp_ocv);
-BENCHMARK_IMAGE(BM_calcOpticalFlowPyrLK_ocv);
+// BENCHMARK_IMAGE(BM_medianBlur_ocv);
+// BENCHMARK_IMAGE(BM_GaussianBlur_ocv);
+// BENCHMARK_IMAGE(BM_Sobel_ocv);
+// BENCHMARK_IMAGE(BM_Canny_ocv);
+// BENCHMARK_IMAGE(BM_dilate_ocv);
+// BENCHMARK_IMAGE(BM_erode_ocv);
+// BENCHMARK_IMAGE(BM_integral_ocv);
+// BENCHMARK_IMAGE(BM_boxFilter_ocv);
+// BENCHMARK_IMAGE(BM_bilateralFilter_ocv);
+// BENCHMARK_IMAGE(BM_calcHist_ocv);
+// BENCHMARK_IMAGE(BM_pyrDown_ocv);
+// BENCHMARK_IMAGE(BM_pyrUp_ocv);
+// BENCHMARK_IMAGE(BM_calcOpticalFlowPyrLK_ocv);
 BENCHMARK_IMAGE(BM_resizeBilinear_ocv);
+BENCHMARK_IMAGE(BM_resizeBilinear2_ocv);
 BENCHMARK_IMAGE(BM_resizeBicubic_ocv);
-BENCHMARK_IMAGE(BM_warpAffine_ocv);
-BENCHMARK_IMAGE(BM_warpPerspective_ocv);
+// BENCHMARK_IMAGE(BM_warpAffine_ocv);
+// BENCHMARK_IMAGE(BM_warpPerspective_ocv);
 
 
 

@@ -84,13 +84,13 @@ if [[ ${usb_state} == 1 ]]; then
         unset LD_PRELOAD ;\
         export LD_LIBRARY_PATH=./lib; \
         chmod -R 777 ./bin; \
-        ./bin/perftest --benchmark_format=console --benchmark_out_format=csv --benchmark_out=./output/bm_res.csv;"
+        ./bin/oprtest --benchmark_format=console --benchmark_out_format=csv --benchmark_out=./output/bm_res.csv;"
 else
     $SSH -t $HOST "cd $user; \
         unset LD_PRELOAD ;\
         export LD_LIBRARY_PATH=./lib; \
         chmod -R 777 ./bin; \
-        ./bin/perftest --benchmark_format=console --benchmark_out_format=csv --benchmark_out=./output/bm_res.csv;"
+        ./bin/oprtest --benchmark_format=console --benchmark_out_format=csv --benchmark_out=./output/bm_res.csv;"
 fi
 
 echo "========================================"

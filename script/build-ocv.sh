@@ -66,10 +66,11 @@ if [[ ${TARGET_OS} == "Android" ]]; then
 fi
 
 CMAKE_CONFIG="-G "Ninja" \\
+    -D CMAKE_INSTALL_PREFIX=${INSTALL_ROOT} \\
     -D CMAKE_POSITION_INDEPENDENT_CODE=ON \\
     -D OPENCV_EXTRA_MODULES_PATH=${EXTRA_MODULE_PATH} \\
     -D ENABLE_CXX11=ON \\
-    -D BUILD_SHARED_LIBS=ON \\
+    -D BUILD_SHARED_LIBS=OFF \\
     -D BUILD_opencv_world=OFF \\
     -D BUILD_opencv_apps=OFF \\
     -D BUILD_TESTS=OFF \\
@@ -94,7 +95,7 @@ if [[ ${TARGET_OS} == "Android" ]]; then
     -D CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \\
     -D ANDROID_SDK=${ANDROID_SDK} \\
     -D ANDROID_NDK=${ANDROID_NDK} \\
-    -D ANDROID_PLATFORM=android-26 \\
+    -D ANDROID_PLATFORM=android-28 \\
     -D ANDROID_STL=c++_static \\
     -D ANDROID_PIE=ON "
 fi
@@ -102,26 +103,24 @@ fi
 
 if [[ ${TARGET_OS} == "Android" ]]; then
     BUILD_DIR=${BUILD_ROOT}/armeabi-v7a
-    INSTALL_DIR=${INSTALL_ROOT}/armeabi-v7a
-    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="armeabi-v7a with NEON" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
+    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="armeabi-v7a with NEON" -B ${BUILD_DIR} ${SRC_DIR}
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
-    # BUILD_DIR=${BUILD_ROOT}/arm64-v8a
-    # INSTALL_DIR=${INSTALL_ROOT}/arm64-v8a
-    # cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="arm64-v8a" -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
-    # cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
+    BUILD_DIR=${BUILD_ROOT}/arm64-v8a
+    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D ANDROID_ABI="arm64-v8a" -B ${BUILD_DIR} ${SRC_DIR}
+    cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
 else
 
     BUILD_DIR=${BUILD_ROOT}/x64-Release
     INSTALL_DIR=${INSTALL_ROOT}/x64-Release
-    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
+    cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Release -B ${BUILD_DIR} ${SRC_DIR}
     cmake --build ${BUILD_DIR} --config Release --target install -- -j${CPU_CORES}
 
     # Debug vs Release has no difference!!!
     # BUILD_DIR=${BUILD_ROOT}/x64-Debug
     # INSTALL_DIR=${INSTALL_ROOT}/x64-Debug
-    # cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Debug -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR} -B ${BUILD_DIR} ${SRC_DIR}
+    # cmake ${CMAKE_CONFIG} -D CMAKE_BUILD_TYPE=Debug -B ${BUILD_DIR} ${SRC_DIR}
     # cmake --build ${BUILD_DIR} --config Debug --target install -- -j${CPU_CORES}
 
 fi
